@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pin-kode Sjekk</title>
+    <title>Pin-kode Validering</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,16 +41,27 @@
     <div class="message" id="message"></div>
 
     <script>
-        const correctPin = "1234"; // Sett din ønskede pin-kode her
-        const webhookUrl = "https://your-webhook-url.com"; // Erstatt med din Homey Pro-webhook-URL
+        // Kryptert (hashed) pin-kode som fasit for 4142
+        const correctPinHash = "a4c9c38056f33b623cfec803bc6bc3f0"; // MD5 hash av "4142"
+
+        // Homey webhook URL
+        const homeyWebhookUrl = "https://webhooks.athom.com/webhook/6298c316b2e5650bc07b3a44";
 
         function validatePin() {
             const pinInput = document.getElementById("pinInput").value;
             const messageDiv = document.getElementById("message");
 
-            if (pinInput === correctPin) {
-                messageDiv.textContent = "Pin-kode er riktig! Oppdaterer Homey...";
-                fetch(webhookUrl, { method: "GET" }) // Du kan endre til POST om nødvendig
+            // Hash brukerens input med MD5
+            const inputHash = CryptoJS.MD5(pinInput).toString();
+
+            // Sammenlign den krypterte input med den krypterte fasiten
+            if (inputHash === correctPinHash) {
+                messageDiv.textContent = "Pin-kode er riktig! Webhook kalles...";
+                
+                // Kall webhook for å sette variabelen "garasjepin" til 1
+                fetch(`${homeyWebhookUrl}?tag=garasjepin&value=1`, {
+                    method: "GET",
+                })
                     .then(response => {
                         if (response.ok) {
                             messageDiv.textContent = "Webhook kalt suksessfullt!";
