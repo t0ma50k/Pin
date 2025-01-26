@@ -48,11 +48,15 @@
         const homeyWebhookUrl = "https://webhooks.athom.com/webhook/6298c316b2e5650bc07b3a44";
 
         function validatePin() {
-            const pinInput = document.getElementById("pinInput").value;
+            const pinInput = document.getElementById("pinInput").value.trim(); // Fjerner mellomrom
             const messageDiv = document.getElementById("message");
 
             // Hash brukerens input med MD5
             const inputHash = CryptoJS.MD5(pinInput).toString();
+
+            // Debugging: Log brukerens input og hash for feilsøking
+            console.log("Brukerinput:", pinInput);
+            console.log("Generert hash:", inputHash);
 
             // Sammenlign den krypterte input med den krypterte fasiten
             if (inputHash === correctPinHash) {
