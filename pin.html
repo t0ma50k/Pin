@@ -41,8 +41,8 @@
     <div class="message" id="message"></div>
 
     <script>
-        // Oppdatert kryptert (hashed) pin-kode for 4142
-        const correctPinHash = "0077acff7c9ab34562699e4e1d05affb"; // Riktig MD5-hash for "4142"
+        // Kryptert (hashed) pin-kode som fasit for 4142
+        const correctPinHash = "a4c9c38056f33b623cfec803bc6bc3f0"; // MD5 hash av "4142"
 
         // Homey webhook URL
         const homeyWebhookUrl = "https://webhooks.athom.com/webhook/6298c316b2e5650bc07b3a44";
@@ -51,12 +51,13 @@
             const pinInput = document.getElementById("pinInput").value.trim(); // Fjerner mellomrom
             const messageDiv = document.getElementById("message");
 
-            // Hash brukerens input med MD5
-            const inputHash = CryptoJS.MD5(pinInput).toString();
-
-            // Debugging: Log brukerens input og hash for feilsøking
-            console.clear(); // Rens konsollen før logging
+            // Logg brukerens input før hash-prosessen
             console.log("Brukerinput (trimmet):", pinInput);
+            
+            // Hash brukerens input med MD5 og konverter til en streng
+            const inputHash = CryptoJS.MD5(pinInput).toString(CryptoJS.enc.Hex);
+
+            // Logg den genererte hash
             console.log("Generert hash:", inputHash);
             console.log("Korrekt hash:", correctPinHash);
 
