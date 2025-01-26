@@ -55,8 +55,10 @@
             const inputHash = CryptoJS.MD5(pinInput).toString();
 
             // Debugging: Log brukerens input og hash for feilsøking
-            console.log("Brukerinput:", pinInput);
+            console.clear(); // Rens konsollen før logging
+            console.log("Brukerinput (trimmet):", pinInput);
             console.log("Generert hash:", inputHash);
+            console.log("Korrekt hash:", correctPinHash);
 
             // Sammenlign den krypterte input med den krypterte fasiten
             if (inputHash === correctPinHash) {
