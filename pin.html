@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin-kode Sjekk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .input-container {
+            margin: 20px auto;
+            width: 300px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pin-kode Validering</h1>
+    <div class="input-container">
+        <input type="password" id="pinInput" placeholder="Skriv inn pin-kode">
+        <button onclick="validatePin()">Sjekk</button>
+    </div>
+    <div class="message" id="message"></div>
+
+    <script>
+        const correctPin = "1234"; // Sett din ønskede pin-kode her
+        const webhookUrl = "https://your-webhook-url.com"; // Erstatt med din Homey Pro-webhook-URL
+
+        function validatePin() {
+            const pinInput = document.getElementById("pinInput").value;
+            const messageDiv = document.getElementById("message");
+
+            if (pinInput === correctPin) {
+                messageDiv.textContent = "Pin-kode er riktig! Oppdaterer Homey...";
+                fetch(webhookUrl, { method: "GET" }) // Du kan endre til POST om nødvendig
+                    .then(response => {
+                        if (response.ok) {
+                            messageDiv.textContent = "Webhook kalt suksessfullt!";
+                        } else {
+                            messageDiv.textContent = "Webhook feilet. Prøv igjen.";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Feil:", error);
+                        messageDiv.textContent = "En feil oppstod. Prøv igjen.";
+                    });
+            } else {
+                messageDiv.textContent = "Feil pin-kode. Prøv igjen.";
+            }
+        }
+    </script>
+</body>
+</html>
